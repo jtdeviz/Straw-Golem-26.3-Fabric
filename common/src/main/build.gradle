@@ -1,0 +1,50 @@
+plugins {
+    id 'multiloader-common'
+    id 'net.fabricmc.fabric-loom'
+}
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    compileOnly "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.5'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.5'
+    compileOnly "maven.modrinth:8BmcQJ2H:kSxHvs99"
+}
+
+loom {
+    def aw = file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+}
